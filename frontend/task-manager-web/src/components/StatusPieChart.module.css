@@ -1,0 +1,28 @@
+/* ステータス別の円グラフ（ui-design.md SCR-21）。色はステータスの色帯（tokens.css の --sc-{color}-bar） */
+.chart { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: var(--space-4); }
+.header { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4); }
+.total { font-size: var(--font-size-body); }
+.body { display: flex; gap: var(--space-6); align-items: flex-start; flex-wrap: wrap; }
+.pie { width: 220px; max-width: 100%; height: auto; flex: none; }
+.slice { stroke: #fff; stroke-width: 2; }
+.tableWrap { flex: 1 1 280px; min-width: 0; }
+/* 共通の .tm-table th / td（左寄せ）より優先させる */
+.tableWrap .number { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.nameCell { font-weight: 600; white-space: nowrap; }
+.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: var(--space-2); vertical-align: -1px; }
+tr[data-zero] .nameCell, tr[data-zero] td { color: var(--color-text-muted); }
+
+.slice[data-color="gray"], .swatch[data-color="gray"] { fill: var(--sc-gray-bar); background: var(--sc-gray-bar); }
+.slice[data-color="blue"], .swatch[data-color="blue"] { fill: var(--sc-blue-bar); background: var(--sc-blue-bar); }
+.slice[data-color="teal"], .swatch[data-color="teal"] { fill: var(--sc-teal-bar); background: var(--sc-teal-bar); }
+.slice[data-color="green"], .swatch[data-color="green"] { fill: var(--sc-green-bar); background: var(--sc-green-bar); }
+.slice[data-color="yellow"], .swatch[data-color="yellow"] { fill: var(--sc-yellow-bar); background: var(--sc-yellow-bar); }
+.slice[data-color="orange"], .swatch[data-color="orange"] { fill: var(--sc-orange-bar); background: var(--sc-orange-bar); }
+.slice[data-color="red"], .swatch[data-color="red"] { fill: var(--sc-red-bar); background: var(--sc-red-bar); }
+.slice[data-color="purple"], .swatch[data-color="purple"] { fill: var(--sc-purple-bar); background: var(--sc-purple-bar); }
+.slice[data-color="pink"], .swatch[data-color="pink"] { fill: var(--sc-pink-bar); background: var(--sc-pink-bar); }
+
+@media (max-width: 767px) {
+  .body { flex-direction: column; align-items: stretch; }
+  .pie { align-self: center; width: 200px; }
+}

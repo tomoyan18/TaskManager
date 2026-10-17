@@ -1,0 +1,6 @@
+.page { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 10vh var(--space-4) var(--space-4); }
+.box { width: 100%; max-width: 420px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: var(--space-8) var(--space-6); }
+.brand { margin: 0 0 var(--space-2); font-weight: 700; color: var(--color-primary); }
+.rules { list-style: none; padding: 0; margin: 0 0 var(--space-4); font-size: var(--font-size-small); }
+.ok { color: var(--color-success); }
+.ng { color: var(--color-text-muted); }
