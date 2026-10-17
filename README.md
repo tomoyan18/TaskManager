@@ -5,9 +5,6 @@
 
 ![タスクの一覧（表）](docs/images/03-task-table.png)
 
-> オープンソースの Plane を**参考資料として調査**し、要件・設計から新しく作った独立したアプリケーションです。
-> Plane のコード・名前・データ・Secret は使っていません（[docs/completion/final-checklist.md](docs/completion/final-checklist.md) §1）。
-
 ## 目次
 
 1. [主な機能](#1-主な機能)
@@ -290,7 +287,7 @@ docs/design/api-design.md を更新
 
 | 場所 | 内容 |
 |---|---|
-| [docs/analysis/](docs/analysis/) | 参考資料（Plane）の解析結果 |
+| [docs/analysis/](docs/analysis/) | 解析 |
 | [docs/design/](docs/design/) | 要件・アーキテクチャ・DB・API・画面・セキュリティ・テストの設計 |
 | [docs/environment/](docs/environment/) | 環境構築・設定・Docker・発生した問題 |
 | [docs/implementation/](docs/implementation/) | 実装状況と設計からの変更 |
