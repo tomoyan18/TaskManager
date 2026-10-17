@@ -1,0 +1,21 @@
+# 開発用の上書き設定（docs/design/architecture.md §7.7）
+# 使い方: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db migrate
+#   DB を 127.0.0.1:3307、API を 127.0.0.1:5080 に公開し、Swagger UI を有効にする。
+services:
+  db:
+    ports:
+      - "127.0.0.1:${TM_DB_PORT:-3307}:3306"
+    networks:
+      - tm-internal
+      - tm-devhost
+
+  api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      Swagger__Enabled: "true"
+    ports:
+      - "127.0.0.1:${TM_API_PORT:-5080}:8080"
+
+networks:
+  # 内部ネットワーク（internal: true）だけではポートを公開できないため、開発時のみ追加する
+  tm-devhost: {}

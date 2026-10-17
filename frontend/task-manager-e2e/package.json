@@ -1,0 +1,20 @@
+{
+  "name": "task-manager-e2e",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "TaskManager の E2E テスト（Playwright）。docs/design/testing-strategy.md §9",
+  "scripts": {
+    "test": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^24.19.2",
+    "typescript": "~5.9.3"
+  }
+}

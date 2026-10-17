@@ -1,0 +1,38 @@
+# ===== Secret（絶対にコミットしない） =====
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.key
+*.pem
+appsettings.*.local.json
+secrets.json
+
+# ===== .NET =====
+bin/
+obj/
+artifacts/
+TestResults/
+*.user
+*.suo
+.vs/
+*.coverage
+coverage*.xml
+
+# ===== Node / Frontend =====
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.vite/
+playwright-report/
+test-results/
+
+# ===== OS / IDE =====
+.DS_Store
+._*
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

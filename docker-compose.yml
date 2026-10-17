@@ -1,0 +1,132 @@
+# TaskManager の全体構成（docs/design/architecture.md §7）
+# 使い方: cp .env.example .env → 値を生成して設定 → docker compose up -d --build
+name: taskmanager
+
+
+services:
+  db:
+    # 公式 mysql:8.4.11 から、使わない部品（MySQL Shell・gosu）を除き openssl を更新したイメージ。mysql 利用者で動く（Phase 7）
+    build:
+      context: docker/mysql
+    image: taskmanager-db:8.4.11
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_ai_ci"]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD を .env に設定してください}
+      # root はコンテナ内（ソケット）からのみ接続できるようにする（ネットワーク経由の root ログインを作らない。Phase 7）
+      MYSQL_ROOT_HOST: localhost
+      MYSQL_DATABASE: ${TM_DB_NAME:-taskmanager_db}
+      TM_DB_APP_USER: ${TM_DB_APP_USER:-taskmanager_app}
+      TM_DB_APP_PASSWORD: ${TM_DB_APP_PASSWORD:?TM_DB_APP_PASSWORD を .env に設定してください}
+      TM_DB_MIGRATOR_USER: ${TM_DB_MIGRATOR_USER:-taskmanager_migrator}
+      TM_DB_MIGRATOR_PASSWORD: ${TM_DB_MIGRATOR_PASSWORD:?TM_DB_MIGRATOR_PASSWORD を .env に設定してください}
+    volumes:
+      - tm-mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - tm-internal
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+      target: migrate
+    environment:
+      MIGRATOR_CONNECTION: "Server=db;Port=3306;Database=${TM_DB_NAME:-taskmanager_db};User ID=${TM_DB_MIGRATOR_USER:-taskmanager_migrator};Password=${TM_DB_MIGRATOR_PASSWORD:?};SslMode=Required"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - tm-internal
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
+      target: runtime
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${TM_ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__TaskManager: "Server=db;Port=3306;Database=${TM_DB_NAME:-taskmanager_db};User ID=${TM_DB_APP_USER:-taskmanager_app};Password=${TM_DB_APP_PASSWORD:?};SslMode=Required"
+      Jwt__SigningKey: ${TM_JWT_SIGNING_KEY:?TM_JWT_SIGNING_KEY を .env に設定してください}
+      Jwt__Issuer: ${TM_JWT_ISSUER:-taskmanager}
+      Jwt__Audience: ${TM_JWT_AUDIENCE:-taskmanager-web}
+      Swagger__Enabled: ${TM_ENABLE_SWAGGER:-false}
+      AuthCookie__Secure: ${TM_COOKIE_SECURE:-true}
+      Attachments__RootPath: /var/lib/taskmanager/attachments
+      # 初期システム管理者（有効なシステム管理者が 0 人のときだけ使われる）。作成後は .env から削除してよい
+      Bootstrap__AdminEmail: ${TM_BOOTSTRAP_ADMIN_EMAIL:-}
+      Bootstrap__AdminPassword: ${TM_BOOTSTRAP_ADMIN_PASSWORD:-}
+    volumes:
+      - tm-attachments:/var/lib/taskmanager/attachments
+    networks:
+      - tm-internal
+      - tm-edge
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+      target: runtime
+    ports:
+      - "${TM_WEB_PORT:-8080}:8080"
+    networks:
+      - tm-edge
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+networks:
+  # DB は外部から到達できない内部ネットワークのみに置く
+  tm-internal:
+    internal: true
+  tm-edge: {}
+
+volumes:
+  tm-mysql-data:
+  tm-attachments:

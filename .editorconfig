@@ -1,0 +1,39 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+
+[*.{json,yml,yaml,ts,tsx,css,html,md}]
+indent_size = 2
+
+[*.cs]
+# --- コード分析ルールの調整（Directory.Build.props で警告をエラー扱いにしているため、理由とともに記録する） ---
+# CA1711: ProjectPermission など設計書の名前（naming-rules.md）を優先する
+dotnet_diagnostic.CA1711.severity = none
+# CA1000: PagedResponse<T>.Create のようなファクトリは読みやすさを優先する
+dotnet_diagnostic.CA1000.severity = none
+# CA2007: ASP.NET Core には同期コンテキストがないため ConfigureAwait(false) を必須にしない
+dotnet_diagnostic.CA2007.severity = none
+# CA1062: Nullable 参照型を有効にしており、公開メソッドの null 検査は型で表現する
+dotnet_diagnostic.CA1062.severity = none
+# CA1848: 頻度の高いログは LoggerMessage を使うが、全箇所には強制しない
+dotnet_diagnostic.CA1848.severity = suggestion
+# CA1716: Domain の "Tasks" 名前空間などは業務用語を優先する
+dotnet_diagnostic.CA1716.severity = none
+# CA1724: 型名と名前空間名の重複（例: Tasks）は業務用語を優先する
+dotnet_diagnostic.CA1724.severity = none
+# CA1032: Application の例外は必要なコンストラクタのみ持つ
+dotnet_diagnostic.CA1032.severity = suggestion
+# CA1812: DI で生成される内部クラスの誤検知を避ける
+dotnet_diagnostic.CA1812.severity = none
+# CA1515: ASP.NET Core の Controller / テストは public 型にする必要がある
+dotnet_diagnostic.CA1515.severity = none
+
+# EF Core が自動生成するマイグレーションは手で編集しないため、コード分析の対象外にする
+[src/TaskManager.Infrastructure/Persistence/Migrations/*.cs]
+generated_code = true
+dotnet_analyzer_diagnostic.severity = none
