@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- ユースケース・DTO・検証・認可判定・インターフェース（docs/design/architecture.md §2） -->
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManager.Domain\TaskManager.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- IAppDbContext のため EF Core（プロバイダなし）に依存する -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+  </ItemGroup>
+</Project>

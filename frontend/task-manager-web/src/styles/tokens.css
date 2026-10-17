@@ -1,0 +1,50 @@
+/* デザイントークン（docs/design/ui-design.md §3）。値は TaskManager 用に新規に定義したもの */
+:root {
+  --color-bg: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-border: #d9dde3;
+  --color-text: #1f2933;
+  --color-text-muted: #52606d;
+  --color-primary: #1d5fbf;
+  --color-danger: #b42318;
+  --color-warning: #9a5b00;
+  --color-success: #1e7a3d;
+  --focus-ring: 0 0 0 3px rgba(29, 95, 191, 0.45);
+
+  --font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", system-ui, sans-serif;
+  --font-size-body: 15px;
+  --font-size-small: 13px;
+  --font-size-title: 20px;
+  --font-size-section: 17px;
+  --line-height-body: 1.6;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --radius-control: 6px;
+  --radius-card: 10px;
+}
+
+/*
+ * ステータス・タグの 9 色（StatusColor）。淡い背景 + 濃い文字 + 左端の色帯。
+ * 文字と背景のコントラストはすべて 4.5:1 以上（ui-design.md §3.1）。
+ */
+:root {
+  --sc-gray-bg: #eef0f3; --sc-gray-fg: #3e4c59; --sc-gray-bar: #7b8794;
+  --sc-blue-bg: #e3edfb; --sc-blue-fg: #164a94; --sc-blue-bar: #2f6fd1;
+  --sc-teal-bg: #ddf3f1; --sc-teal-fg: #0b5c55; --sc-teal-bar: #1a9a8f;
+  --sc-green-bg: #e1f4e6; --sc-green-fg: #1a6233; --sc-green-bar: #2f9e55;
+  --sc-yellow-bg: #fbf3d6; --sc-yellow-fg: #6b5000; --sc-yellow-bar: #c99a00;
+  --sc-orange-bg: #fdebdc; --sc-orange-fg: #8a3c00; --sc-orange-bar: #e0761a;
+  --sc-red-bg: #fbe4e2; --sc-red-fg: #9b1c12; --sc-red-bar: #d93a2e;
+  --sc-purple-bg: #efe6fa; --sc-purple-fg: #5a2a96; --sc-purple-bar: #8a55d1;
+  --sc-pink-bg: #fbe5f1; --sc-pink-fg: #8e1c5a; --sc-pink-bar: #d2458f;
+
+  --header-height: 56px;
+  --sidebar-width: 240px;
+  --shadow-popover: 0 8px 24px rgba(31, 41, 51, 0.16);
+}
