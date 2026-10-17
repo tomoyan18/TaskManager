@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 業務ルールの中心。外部パッケージに依存しない（docs/design/architecture.md §2） -->
+</Project>

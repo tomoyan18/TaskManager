@@ -1,0 +1,26 @@
+.titleCell { min-width: 240px; }
+.cardList { display: none; list-style: none; padding: 0; margin: 0; }
+.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: var(--space-3); margin-bottom: var(--space-2); }
+.card[draggable="true"] { cursor: grab; }
+.board { display: flex; gap: var(--space-3); overflow-x: auto; padding-bottom: var(--space-3); align-items: flex-start; scroll-snap-type: x mandatory; }
+.column { flex: 0 0 280px; background: #eef1f5; border-radius: var(--radius-card); padding: var(--space-3); scroll-snap-align: start; min-height: 160px; }
+.column[data-drag-over] { outline: 3px dashed var(--color-primary); }
+.columnTitle { display: flex; align-items: center; justify-content: space-between; font-size: var(--font-size-body); margin: 0 0 var(--space-2); }
+.columnList { list-style: none; padding: 0; margin: 0 0 var(--space-2); }
+.layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr); gap: var(--space-6); align-items: start; }
+.properties { position: sticky; top: calc(var(--header-height) + var(--space-4)); }
+.propertyRow { display: grid; grid-template-columns: 7em 1fr; gap: var(--space-2); align-items: start; margin-bottom: var(--space-3); }
+.propertyLabel { color: var(--color-text-muted); font-size: var(--font-size-small); padding-top: 6px; }
+.saved { color: var(--color-success); font-size: var(--font-size-small); }
+.subtasks { list-style: none; padding: 0; margin: 0; }
+.subtasks li { display: flex; gap: var(--space-2); align-items: center; padding: var(--space-1) 0; }
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline li { padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border); }
+@media (max-width: 1023px) { .hideTablet { display: none; } }
+@media (max-width: 767px) {
+  .tableOnly { display: none; }
+  .cardList { display: block; }
+  .column { flex-basis: 85vw; }
+  .layout { grid-template-columns: 1fr; }
+  .properties { position: static; order: -1; }
+}

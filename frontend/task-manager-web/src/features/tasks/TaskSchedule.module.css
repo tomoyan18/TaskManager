@@ -1,0 +1,70 @@
+/* ガントチャート（ui-design.md SCR-20）。色はステータスの 3 色の組（tokens.css の --sc-{color}-bg / -fg / -bar） */
+.toolbar { display: flex; align-items: center; gap: var(--space-2) var(--space-4); flex-wrap: wrap; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: var(--space-3); }
+
+.gantt { --gantt-label: 300px; --gantt-row: 52px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
+.scroller { overflow-x: auto; }
+.canvas { position: relative; }
+
+/* 目盛りの帯と今日の線（全行の後ろに重ねる） */
+.overlay { position: absolute; top: 0; bottom: 0; left: var(--gantt-label); pointer-events: none; }
+.columnBand { position: absolute; top: 0; bottom: 0; border-left: 1px solid #e6e9ee; }
+.columnBand[data-weekend] { background: #f6f7f9; }
+.todayLine { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--color-primary); }
+
+.headerRow, .groupRow, .row { display: flex; align-items: stretch; border-bottom: 1px solid var(--color-border); }
+.headerRow { min-height: 44px; position: relative; }
+.labelCell {
+  position: sticky; left: 0; z-index: 2; flex: none; width: var(--gantt-label); padding: var(--space-2) var(--space-3);
+  background: var(--color-surface); border-right: 1px solid var(--color-border); display: flex; flex-direction: column; justify-content: center; min-width: 0;
+}
+.headerRow .labelCell { font-size: var(--font-size-small); font-weight: 600; color: var(--color-text-muted); background: #f9fafb; }
+.track { position: relative; flex: none; }
+.columnLabel { position: absolute; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; padding-left: 4px; font-size: 12px; line-height: 1.3; white-space: nowrap; overflow: hidden; }
+.todayLabel { position: absolute; bottom: 2px; transform: translateX(-50%); font-size: 11px; font-weight: 700; color: #fff; background: var(--color-primary); border-radius: 3px; padding: 0 4px; z-index: 1; }
+
+.groupRow { background: #f3f5f8; }
+.groupRow .labelCell { background: #f3f5f8; }
+.groupTitle { margin: 0; font-size: var(--font-size-body); display: flex; align-items: center; gap: var(--space-1); flex-wrap: wrap; }
+.milestoneMark { position: absolute; top: 50%; transform: translate(-50%, -50%); color: var(--color-text); font-size: 16px; }
+
+.rows { list-style: none; margin: 0; padding: 0; }
+.row { min-height: var(--gantt-row); }
+.rowTitle { color: inherit; text-decoration: none; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rowTitle:hover { text-decoration: underline; }
+.rowMeta { font-size: 12px; color: var(--color-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 棒: 淡い背景 + 濃い文字 + 左端の色帯（ステータスの表示と同じ組。文字のコントラストは 4.5:1 以上） */
+.bar {
+  position: absolute; top: 50%; height: 28px; transform: translateY(-50%); display: flex; align-items: center; gap: 2px;
+  border: 1px solid var(--sc-gray-bar); border-left-width: 4px; border-radius: 4px; background: var(--sc-gray-bg); color: var(--sc-gray-fg);
+  font-size: 12px; font-weight: 600; padding: 0 4px; overflow: hidden; white-space: nowrap; cursor: pointer; user-select: none; touch-action: pan-y;
+}
+.bar[data-editable] { cursor: grab; }
+.bar[data-dragging] { cursor: grabbing; box-shadow: var(--shadow-popover); z-index: 1; }
+.bar[data-overdue] { outline: 2px solid var(--color-danger); outline-offset: 1px; }
+.bar[data-closed] { border-style: dashed; }
+.barText { overflow: hidden; text-overflow: ellipsis; }
+.clip { font-weight: 700; }
+.handle { position: absolute; top: 0; right: 0; bottom: 0; width: 8px; cursor: ew-resize; background: rgba(31, 41, 51, 0.12); }
+.overdueText, .dragText { position: absolute; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.overdueText { color: var(--color-danger); }
+.dragText { color: var(--color-text); background: var(--color-surface); padding: 0 4px; border-radius: 3px; z-index: 2; }
+
+.bar[data-color="gray"] { border-color: var(--sc-gray-bar); background: var(--sc-gray-bg); color: var(--sc-gray-fg); }
+.bar[data-color="blue"] { border-color: var(--sc-blue-bar); background: var(--sc-blue-bg); color: var(--sc-blue-fg); }
+.bar[data-color="teal"] { border-color: var(--sc-teal-bar); background: var(--sc-teal-bg); color: var(--sc-teal-fg); }
+.bar[data-color="green"] { border-color: var(--sc-green-bar); background: var(--sc-green-bg); color: var(--sc-green-fg); }
+.bar[data-color="yellow"] { border-color: var(--sc-yellow-bar); background: var(--sc-yellow-bg); color: var(--sc-yellow-fg); }
+.bar[data-color="orange"] { border-color: var(--sc-orange-bar); background: var(--sc-orange-bg); color: var(--sc-orange-fg); }
+.bar[data-color="red"] { border-color: var(--sc-red-bar); background: var(--sc-red-bg); color: var(--sc-red-fg); }
+.bar[data-color="purple"] { border-color: var(--sc-purple-bar); background: var(--sc-purple-bg); color: var(--sc-purple-fg); }
+.bar[data-color="pink"] { border-color: var(--sc-pink-bar); background: var(--sc-pink-bg); color: var(--sc-pink-fg); }
+
+.tableGroup th { background: #f3f5f8; color: var(--color-text); font-size: var(--font-size-body); }
+.undatedList { list-style: none; margin: 0; padding: 0; }
+.undatedList li { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-1) 0; flex-wrap: wrap; }
+
+@media (max-width: 767px) {
+  .gantt { --gantt-label: 150px; }
+  .rowMeta { white-space: normal; }
+}
